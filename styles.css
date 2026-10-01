@@ -514,6 +514,8 @@ details p { color: var(--fg-muted); margin: -6px 0 22px; max-width: 44em; }
 .lb-nav { position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 48px; border-radius: 50%; border: 0; background: rgba(255,255,255,.92); color: var(--ink); font-size: 2rem; line-height: 1; cursor: pointer; box-shadow: 0 6px 18px rgba(0,0,0,.3); }
 .lb-nav.prev { left: 14px; } .lb-nav.next { right: 14px; }
 .lb-count { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,.55); color: #fff; font-size: .8rem; padding: 4px 12px; border-radius: 999px; }
+.lb-caption { margin: 0; font-weight: 600; font-size: .95rem; }
+.lb-caption:empty { display: none; }
 .lb-thumbs { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
 .lb-thumbs button { flex: 0 0 auto; width: 80px; height: 58px; padding: 0; border: 3px solid transparent; border-radius: 12px; overflow: hidden; cursor: pointer; background: none; opacity: .6; transition: opacity .2s; }
 .lb-thumbs button.on { border-color: var(--red); opacity: 1; }

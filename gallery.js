@@ -30,11 +30,19 @@ const GALLERY = [
     { id: "photo-1700219212623-77aebb917034", alt: "Display of wigs on mannequin heads" },
     { id: "photo-1701976857871-a46363644519", alt: "Hair care products" }
   ]},
-  { title: "Furniture", blurb: "Sofas, chairs, beds, office and home furniture.", photos: [
-    { id: "photo-1555041469-a586c61ea9bc", alt: "Green fabric sofa" },
-    { id: "photo-1512212621149-107ffe572d2f", alt: "Beige leather sofa" },
-    { id: "photo-1698936061086-2bf99c7b9fc5", alt: "Grey couch with pillows" },
-    { id: "photo-1601392740426-907c7b028119", alt: "Floral armchair" }
+  { title: "Furniture", blurb: "Premium sofas, dining sets, sideboards and shelves from China, made to order and shipped to Ghana.", photos: [
+    { src: "images/furniture/cream-leather-sofa.jpg", alt: "Cream leather sofa with walnut frame", caption: "Cream leather 4-seater sofa with walnut wood frame" },
+    { src: "images/furniture/cognac-leather-sofa.jpg", alt: "Cognac leather sofa", caption: "Cognac leather 3-seater sofa" },
+    { src: "images/furniture/black-leather-sectional.jpg", alt: "Black leather sectional sofa", caption: "Black leather sectional sofa with chaise and built-in side table" },
+    { src: "images/furniture/tan-leather-sofa-set.jpg", alt: "Tan leather sofa set", caption: "Tan leather sofa set with round walnut coffee tables" },
+    { src: "images/furniture/cream-sofa-lounge-chairs.jpg", alt: "Cream sofa with lounge chairs", caption: "Cream leather sofa, marble coffee table and swivel lounge chairs" },
+    { src: "images/furniture/lounge-sofa-set.jpg", alt: "Fabric lounge sofa set", caption: "Fabric lounge sofa set with adjustable backrests" },
+    { src: "images/furniture/oval-dining-table.jpg", alt: "Oval dining table with chairs", caption: "Oval dining table: 160 or 180 × 85 × 75 cm · chairs 61 × 59 × 80 cm" },
+    { src: "images/furniture/round-dining-table-green.jpg", alt: "Round dining table with green chairs", caption: "Round dining table with lazy Susan: Ø135 or Ø150 cm · chairs 61 × 59 × 80 cm" },
+    { src: "images/furniture/round-dining-table-gold.jpg", alt: "Round stone dining table with gold base", caption: "Round stone-top dining table, gold base: Ø130 or Ø150 cm · chairs 55 × 58 × 75 cm" },
+    { src: "images/furniture/walnut-dining-table.jpg", alt: "Walnut dining table with chairs", caption: "Walnut dining table 220 × 90 × 75 cm · chairs 55 × 58 × 75 cm" },
+    { src: "images/furniture/walnut-sideboard.jpg", alt: "Walnut sideboard", caption: "Walnut sideboard with marble shelf: 200 × 42 × 90 cm" },
+    { src: "images/furniture/walnut-bookshelf.jpg", alt: "Walnut and steel bookshelf", caption: "Walnut and steel bookshelf: 110 × 38 × 210 cm each (two shown)" }
   ]},
   { title: "Tiles & building materials", blurb: "Beautiful imported marble, porcelain and ceramic tiles for floors, walls and bathrooms, plus other building supplies.", photos: [
     { id: "photo-1744025098626-66c0b9cb1ba8", alt: "Elegant bathroom with marble wall tiles" },

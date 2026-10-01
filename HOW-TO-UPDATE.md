@@ -33,7 +33,7 @@ You can also edit a file directly on github.com: open it in the repository, clic
 A custom address like `yourcompany.com` is optional (about $10/year) and can be connected later in Settings → Pages.
 
 ## Visitors still see the old version after an update?
-Browsers keep old copies of files. In `index.html` and `terms.html`, change every `?v=12` to the next number (`?v=13`, then `?v=14`…) whenever you edit `config.js`, `tracking.js`, `script.js` or `styles.css`.
+Browsers keep old copies of files. In `index.html` and `terms.html`, change every `?v=13` to the next number (`?v=14`, then `?v=15`…) whenever you edit `config.js`, `tracking.js`, `script.js` or `styles.css`.
 
 ## Updating the "Next shipments" board
 Open `schedule.js` and add one line per upcoming shipment, for example:

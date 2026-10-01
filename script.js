@@ -275,6 +275,7 @@
       idx = (n + cat.photos.length) % cat.photos.length;
       const p = cat.photos[idx];
       img.src = url(p, 1200); img.alt = p.alt;
+      $("#lb-caption").textContent = p.caption || "";
       $("#lb-count").textContent = `${idx + 1} / ${cat.photos.length}`;
       $$("button", thumbs).forEach((t, k) => t.classList.toggle("on", k === idx));
     };
