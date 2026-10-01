@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Mr. Smile logo">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ef2b2d"/>
+      <stop offset="1" stop-color="#a50d18"/>
+    </linearGradient>
+    <linearGradient id="box" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffd84a"/>
+      <stop offset="1" stop-color="#ffb800"/>
+    </linearGradient>
+  </defs>
+
+  <!-- badge -->
+  <rect width="128" height="128" rx="30" fill="url(#bg)"/>
+
+  <!-- sparkle -->
+  <g stroke="#ffd84a" stroke-width="4.5" stroke-linecap="round">
+    <path d="M64 13v10"/>
+    <path d="M45 18l5 8"/>
+    <path d="M83 18l-5 8"/>
+  </g>
+
+  <!-- open flaps -->
+  <path d="M28 50 L16 34 Q15 31 18 31 L58 31 L64 50 Z" fill="#fff4d6"/>
+  <path d="M100 50 L112 34 Q113 31 110 31 L70 31 L64 50 Z" fill="#ffe7a3"/>
+  <!-- box opening -->
+  <path d="M28 50 H100 L96 44 H32 Z" fill="#7a0a12"/>
+
+  <!-- box body -->
+  <rect x="26" y="48" width="76" height="62" rx="10" fill="url(#box)"/>
+  <rect x="26" y="98" width="76" height="12" rx="6" fill="#f3a400" opacity=".55"/>
+
+  <!-- face -->
+  <ellipse cx="50" cy="70" rx="5" ry="6.5" fill="#3a1410"/>
+  <circle cx="51.6" cy="67.8" r="1.6" fill="#fff"/>
+  <path d="M71 71 q7 -7 14 0" fill="none" stroke="#3a1410" stroke-width="4.5" stroke-linecap="round"/>
+  <path d="M46 84 q18 17 36 0" fill="none" stroke="#3a1410" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="40" cy="83" r="5" fill="#ff7a45" opacity=".45"/>
+  <circle cx="88" cy="83" r="5" fill="#ff7a45" opacity=".45"/>
+</svg>
