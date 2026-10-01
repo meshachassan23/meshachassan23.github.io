@@ -313,6 +313,46 @@
     });
   }
 
+  // ---- Next shipments board ----
+  const sched = $("#sched");
+  if (sched && typeof SCHEDULE !== "undefined") {
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const fmtDate = (d) => d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "long" });
+    const upcoming = SCHEDULE
+      .map((s) => ({ ...s, date: new Date(s.closes + "T00:00:00") }))
+      .filter((s) => !isNaN(s.date) && s.date >= today)
+      .sort((a, b) => a.date - b.date);
+    if (!upcoming.length) {
+      sched.innerHTML = `
+        <div class="sched-empty reveal">
+          <div><h3>New closing dates coming soon</h3>
+          <p>Ask us on WhatsApp for the next air and sea shipments from China, Germany and the USA.</p></div>
+          <a class="btn" href="${waLink("Hello Mr. Smile, when is your next shipment to Ghana closing?")}" target="_blank" rel="noopener">Ask for the next date <span class="arrow">→</span></a>
+        </div>`;
+    } else {
+      sched.innerHTML = upcoming.map((s) => {
+        const days = Math.round((s.date - today) / 86400000);
+        const left = days === 0 ? "Closes today" : days === 1 ? "1 day left" : `${days} days left`;
+        const urgent = days <= 3;
+        const msg = `Hello Mr. Smile, I want to book space on the ${s.method} from ${s.from}, closing ${fmtDate(s.date)}.`;
+        return `
+          <article class="sched-card reveal${urgent ? " urgent" : ""}">
+            <div class="sched-top">
+              <span class="sched-method">${s.method}</span>
+              <span class="sched-left">${urgent ? "🔥 " : ""}${left}</span>
+            </div>
+            <h3>${s.from} <span>→ Ghana</span></h3>
+            <dl>
+              <div><dt>Closes</dt><dd>${fmtDate(s.date)}</dd></div>
+              ${s.arrives ? `<div><dt>Arrives (est.)</dt><dd>${s.arrives}</dd></div>` : ""}
+            </dl>
+            ${s.note ? `<p class="sched-note">${s.note}</p>` : ""}
+            <a class="btn btn-block" href="${waLink(msg)}" target="_blank" rel="noopener">Book space <span class="arrow">→</span></a>
+          </article>`;
+      }).join("");
+    }
+  }
+
   // ---- Fade sections in as they scroll into view ----
   const reveals = $$(".reveal");
   if ("IntersectionObserver" in window) {

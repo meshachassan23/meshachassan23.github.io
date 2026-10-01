@@ -28,3 +28,24 @@ A custom address like `yourcompany.com` is optional (about $10/year) and can be 
 
 ## Visitors still see the old version after an update?
 Browsers keep old copies of files. In `index.html` and `terms.html`, change every `?v=12` to the next number (`?v=13`, then `?v=14`…) whenever you edit `config.js`, `tracking.js`, `script.js` or `styles.css`.
+
+## Updating the "Next shipments" board
+Open `schedule.js` and add one line per upcoming shipment, for example:
+```
+{ from: "Guangzhou, China", method: "Sea freight · 40ft container", closes: "2026-10-20", arrives: "Early December", note: "Space filling fast" },
+```
+- `closes` must be written year-month-day. When the date passes, the card disappears by itself.
+- If there are no upcoming shipments, the site shows "New closing dates coming soon" with a WhatsApp button.
+
+## Getting found on Google (free)
+1. **Google Business Profile** (most important for a local business):
+   - Go to https://business.google.com and sign in with your Gmail.
+   - Business name: *Mr. Smile Logistics & Delivery Services*. Category: *Shipping service* (add *Freight forwarding service* and *Car shipping service* as extra categories).
+   - Address: Tesano, behind Lakeside Clinic, Accra. Place the pin on the map exactly.
+   - Phone: +233 24 750 1144. Website: your GitHub address.
+   - Google will verify you (usually by video or phone). Then add photos of your office, shipments and cars.
+   - Ask happy customers to leave a Google review. Reviews push you up in "shipping to Ghana" searches.
+2. **Google Search Console** (tells Google your site exists):
+   - Go to https://search.google.com/search-console, add your site address, and verify it.
+   - Under *Sitemaps*, submit `sitemap.xml`.
+3. Share your link on WhatsApp status, Facebook and TikTok. A nice preview card with your logo shows automatically.

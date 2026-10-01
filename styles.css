@@ -215,6 +215,32 @@ p { margin: 0 0 1em; }
 .facts-grid strong { display: block; font-family: var(--display); font-size: clamp(1.4rem, 2.6vw, 2rem); letter-spacing: -.03em; line-height: 1.1; margin-bottom: 6px; }
 .facts-grid span { font-size: .9rem; color: var(--fg-muted); }
 
+/* ---------- Next shipments ---------- */
+.schedule { padding-bottom: 20px; }
+.sched { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.sched-card {
+  position: relative; padding: 26px; border-radius: var(--r); background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow);
+  display: flex; flex-direction: column; gap: 14px;
+}
+.sched-card.urgent { border-color: rgba(227,23,43,.35); background: linear-gradient(180deg, #fff1f0, #fff 55%); }
+.sched-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.sched-method { font-size: .75rem; font-weight: 700; padding: 6px 12px; border-radius: 999px; background: var(--bg-soft); }
+.sched-left { font-size: .8rem; font-weight: 700; color: #1a8a4a; }
+.urgent .sched-left { color: var(--red); }
+.sched-card h3 { font-size: 1.6rem; margin: 0; }
+.sched-card h3 span { color: var(--fg-muted); font-weight: 600; }
+.sched-card dl { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 0; }
+.sched-card dt { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: var(--fg-muted); }
+.sched-card dd { margin: 2px 0 0; font-weight: 700; }
+.sched-note { margin: 0; font-size: .9rem; color: var(--fg-muted); }
+.sched-card .btn { margin-top: auto; }
+.sched-empty {
+  grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap;
+  padding: 30px; border-radius: var(--r); background: var(--bg-soft); border: 1px dashed rgba(227,23,43,.3);
+}
+.sched-empty h3 { margin-bottom: 4px; }
+.sched-empty p { margin: 0; color: var(--fg-muted); }
+
 /* ---------- Bento services ---------- */
 .bento { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: minmax(230px, auto); gap: 16px; }
 .b-card {
