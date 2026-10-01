@@ -13,17 +13,23 @@ Open files with TextEdit (Format → Make Plain Text) or, better, the free edito
 ## View it on your computer
 Double-click `index.html`, and it opens in your browser.
 
-## Put it online for free (GitHub Pages)
-1. Create a free account at https://github.com
-2. Click **+** (top right) → **New repository**. Name it e.g. `my-import-site`, set it to **Public**, and click **Create repository**.
-3. Click **uploading an existing file**, drag in ALL the files from this folder, then click **Commit changes**.
-4. Go to **Settings → Pages**. Under "Branch" choose **main** and **/ (root)**, then click **Save**.
-5. Wait 1–2 minutes. Your site is live at `https://YOUR-USERNAME.github.io/my-import-site/`
+## Your live website
+**https://meshachassan23.github.io**. It's hosted free by GitHub Pages from the repository
+`meshachassan23/meshachassan23.github.io`.
 
-To update later: open the repository, click the file (e.g. `tracking.js`), click the pencil icon ✏️, make your change, and click **Commit changes**. The site updates in about a minute.
+## Publishing changes
+After editing files in this folder, open Terminal and run:
+```
+cd ~/Desktop/import-website
+git add -A
+git commit -m "Describe your change"
+git push
+```
+The live site updates in about a minute. (Your Mac remembers your GitHub token, so it won't ask again.)
+
+You can also edit a file directly on github.com: open it in the repository, click the pencil icon, change it, then click **Commit changes**.
 
 ## Tip
-If you name the repository exactly `YOUR-USERNAME.github.io`, the address becomes the shorter `https://YOUR-USERNAME.github.io`.
 A custom address like `yourcompany.com` is optional (about $10/year) and can be connected later in Settings → Pages.
 
 ## Visitors still see the old version after an update?
