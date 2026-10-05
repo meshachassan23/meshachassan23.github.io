@@ -354,6 +354,51 @@
     }
   }
 
+  // ---- Customer reviews ----
+  const rvGrid = $("#rv-grid");
+  if (rvGrid && typeof REVIEWS !== "undefined") {
+    const esc2 = (s) => String(s || "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+    const starStr = (n) => "★★★★★".slice(0, n) + "☆☆☆☆☆".slice(0, 5 - n);
+    const list = REVIEWS.filter((r) => r && r.stars >= 1 && r.stars <= 5 && r.text)
+      .sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
+    const sum = $("#rv-summary");
+    if (list.length) {
+      const avg = list.reduce((t, r) => t + r.stars, 0) / list.length;
+      sum.innerHTML = `<strong>${avg.toFixed(1)}</strong><span class="rv-stars" aria-label="${avg.toFixed(1)} out of 5">${starStr(Math.round(avg))}</span><small>from ${list.length} review${list.length > 1 ? "s" : ""}</small>`;
+      rvGrid.innerHTML = list.map((r) => `
+        <figure class="rv-card reveal">
+          <span class="rv-stars" aria-label="${r.stars} out of 5">${starStr(r.stars)}</span>
+          <blockquote>${esc2(r.text)}</blockquote>
+          <figcaption><span class="rv-avatar">${esc2(r.name).charAt(0).toUpperCase()}</span>
+            <span><b>${esc2(r.name)}</b>${r.city ? ", " + esc2(r.city) : ""}<small>${esc2(r.service || "")}${r.date ? " · " + new Date(r.date + "T00:00:00").toLocaleDateString("en-GB", { month: "short", year: "numeric" }) : ""}</small></span>
+          </figcaption>
+        </figure>`).join("");
+    } else {
+      sum.innerHTML = "";
+      rvGrid.innerHTML = `<div class="rv-empty reveal"><span class="rv-stars">★★★★★</span><p><b>Be one of our first reviewers.</b> Shipped with Mr. Smile? Rate us below. It takes less than a minute.</p></div>`;
+    }
+  }
+  const rvForm = $("#rv-form");
+  if (rvForm) {
+    const words = { 1: "Very poor", 2: "Poor", 3: "Okay", 4: "Good", 5: "Excellent" };
+    $$('input[name="stars"]', rvForm).forEach((i) => i.addEventListener("change", () => {
+      $("#rv-stars-text").textContent = `${i.value}/5 · ${words[i.value]}`;
+    }));
+    rvForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const d = Object.fromEntries(new FormData(rvForm));
+      const n = Number(d.stars);
+      openWa([
+        "*Customer review*",
+        "Rating: " + "★".repeat(n) + "☆".repeat(5 - n) + ` (${n}/5)`,
+        "Name: " + d.name + (d.city ? ", " + d.city : ""),
+        "Service: " + d.service,
+        "Review: " + d.text,
+        d.consent ? "✅ OK to publish on the website" : "❌ Please don't publish this review"
+      ].join("\n"));
+    });
+  }
+
   // ---- Fade sections in as they scroll into view ----
   const reveals = $$(".reveal");
   if ("IntersectionObserver" in window) {

@@ -33,7 +33,7 @@ You can also edit a file directly on github.com: open it in the repository, clic
 A custom address like `yourcompany.com` is optional (about $10/year) and can be connected later in Settings → Pages.
 
 ## Visitors still see the old version after an update?
-Browsers keep old copies of files. In `index.html` and `terms.html`, change every `?v=13` to the next number (`?v=14`, then `?v=15`…) whenever you edit `config.js`, `tracking.js`, `script.js` or `styles.css`.
+Browsers keep old copies of files. In `index.html` and `terms.html`, change every `?v=14` to the next number (`?v=15`, then `?v=16`…) whenever you edit `config.js`, `tracking.js`, `script.js` or `styles.css`.
 
 ## Updating the "Next shipments" board
 Open `schedule.js` and add one line per upcoming shipment, for example:
@@ -55,3 +55,12 @@ Open `schedule.js` and add one line per upcoming shipment, for example:
    - Go to https://search.google.com/search-console, add your site address, and verify it.
    - Under *Sitemaps*, submit `sitemap.xml`.
 3. Share your link on WhatsApp status, Facebook and TikTok. A nice preview card with your logo shows automatically.
+
+## Publishing customer reviews
+1. Customers rate you (1–5 stars) in the **Reviews** section. Their review arrives on your WhatsApp, starting with "*Customer review*".
+2. If it's genuine and says "✅ OK to publish", open `reviews.js` and add a line like:
+```
+{ name: "Kofi", city: "Kumasi", stars: 5, service: "Car shipping", date: "2026-10-04", text: "My car arrived in perfect condition." },
+```
+3. Save and publish. The site shows the review and updates the overall star average automatically.
+- Only publish real reviews. Never post a review without the customer's permission, and don't make reviews up.
