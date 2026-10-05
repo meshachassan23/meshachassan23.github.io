@@ -356,18 +356,31 @@
 
   // ---- Customer reviews ----
   const rvGrid = $("#rv-grid");
-  if (rvGrid && typeof REVIEWS !== "undefined") {
-    const esc2 = (s) => String(s || "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-    const starStr = (n) => "★★★★★".slice(0, n) + "☆☆☆☆☆".slice(0, 5 - n);
-    const list = REVIEWS.filter((r) => r && r.stars >= 1 && r.stars <= 5 && r.text)
+  const rvForm = $("#rv-form");
+  const reviewsApi = (SITE.reviewsApi || "").trim();
+  const esc2 = (s) => String(s || "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const starStr = (n) => "★★★★★".slice(0, n) + "☆☆☆☆☆".slice(0, 5 - n);
+  const pickStars = (n) => {
+    const r = $("#s" + n);
+    if (!r) return;
+    r.checked = true;
+    r.dispatchEvent(new Event("change"));
+    rvForm.scrollIntoView({ behavior: "smooth", block: "start" });
+    setTimeout(() => { const f = rvForm.querySelector('input[name="name"]'); f && f.focus({ preventScroll: true }); }, 500);
+  };
+  const renderReviews = (extra) => {
+    if (!rvGrid) return;
+    const local = typeof REVIEWS !== "undefined" ? REVIEWS : [];
+    const list = local.concat(extra || [])
+      .filter((r) => r && r.stars >= 1 && r.stars <= 5 && r.text)
       .sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));
     const sum = $("#rv-summary");
     if (list.length) {
-      const avg = list.reduce((t, r) => t + r.stars, 0) / list.length;
+      const avg = list.reduce((t, r) => t + Number(r.stars), 0) / list.length;
       sum.innerHTML = `<strong>${avg.toFixed(1)}</strong><span class="rv-stars" aria-label="${avg.toFixed(1)} out of 5">${starStr(Math.round(avg))}</span><small>from ${list.length} review${list.length > 1 ? "s" : ""}</small>`;
       rvGrid.innerHTML = list.map((r) => `
-        <figure class="rv-card reveal">
-          <span class="rv-stars" aria-label="${r.stars} out of 5">${starStr(r.stars)}</span>
+        <figure class="rv-card in">
+          <span class="rv-stars" aria-label="${r.stars} out of 5">${starStr(Number(r.stars))}</span>
           <blockquote>${esc2(r.text)}</blockquote>
           <figcaption><span class="rv-avatar">${esc2(r.name).charAt(0).toUpperCase()}</span>
             <span><b>${esc2(r.name)}</b>${r.city ? ", " + esc2(r.city) : ""}<small>${esc2(r.service || "")}${r.date ? " · " + new Date(r.date + "T00:00:00").toLocaleDateString("en-GB", { month: "short", year: "numeric" }) : ""}</small></span>
@@ -375,18 +388,36 @@
         </figure>`).join("");
     } else {
       sum.innerHTML = "";
-      rvGrid.innerHTML = `<div class="rv-empty reveal"><span class="rv-stars">★★★★★</span><p><b>Be one of our first reviewers.</b> Shipped with Mr. Smile? Rate us below. It takes less than a minute.</p></div>`;
+      rvGrid.innerHTML = `<div class="rv-empty">
+          <div class="rv-pick" role="group" aria-label="Rate us">
+            ${[1, 2, 3, 4, 5].map((n) => `<button type="button" data-stars="${n}" aria-label="Rate ${n} out of 5">★</button>`).join("")}
+          </div>
+          <p><b>Be one of our first reviewers.</b> Shipped with Mr. Smile? Tap a star to rate us. It takes less than a minute.</p>
+        </div>`;
+      $$(".rv-pick button", rvGrid).forEach((btn) => {
+        btn.addEventListener("click", () => pickStars(Number(btn.dataset.stars)));
+        btn.addEventListener("mouseenter", () => $$(".rv-pick button", rvGrid).forEach((x) => x.classList.toggle("lit", +x.dataset.stars <= +btn.dataset.stars)));
+      });
+      $(".rv-pick", rvGrid).addEventListener("mouseleave", () => $$(".rv-pick button", rvGrid).forEach((x) => x.classList.remove("lit")));
     }
+  };
+  renderReviews();
+  if (reviewsApi) {
+    fetch(reviewsApi + (reviewsApi.includes("?") ? "&" : "?") + "t=" + Date.now())
+      .then((r) => r.json())
+      .then((d) => { if (d && Array.isArray(d.reviews)) renderReviews(d.reviews); })
+      .catch(() => {});
   }
-  const rvForm = $("#rv-form");
   if (rvForm) {
     const words = { 1: "Very poor", 2: "Poor", 3: "Okay", 4: "Good", 5: "Excellent" };
     $$('input[name="stars"]', rvForm).forEach((i) => i.addEventListener("change", () => {
       $("#rv-stars-text").textContent = `${i.value}/5 · ${words[i.value]}`;
+      $("#rv-stars").classList.remove("need");
     }));
-    rvForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const d = Object.fromEntries(new FormData(rvForm));
+    rvForm.addEventListener("invalid", (e) => {
+      if (e.target.name === "stars") { $("#rv-stars").classList.add("need"); $("#rv-stars-text").textContent = "Please tap a star"; }
+    }, true);
+    const viaWhatsApp = (d) => {
       const n = Number(d.stars);
       openWa([
         "*Customer review*",
@@ -396,6 +427,25 @@
         "Review: " + d.text,
         d.consent ? "✅ OK to publish on the website" : "❌ Please don't publish this review"
       ].join("\n"));
+    };
+    rvForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const d = Object.fromEntries(new FormData(rvForm));
+      if (!reviewsApi) return viaWhatsApp(d);
+      const btn = rvForm.querySelector('button[type="submit"]');
+      btn.disabled = true; btn.textContent = "Sending…";
+      try {
+        const body = new URLSearchParams({ ...d, consent: d.consent ? "yes" : "no" });
+        const res = await fetch(reviewsApi, { method: "POST", body });
+        const out = await res.json();
+        if (!out.ok) throw new Error(out.error || "failed");
+        rvForm.innerHTML = `<div class="rv-thanks"><span class="rv-stars">${starStr(Number(d.stars))}</span>
+          <h3>Thank you, ${esc2(d.name)}!</h3>
+          <p>Your review has been received. It will appear on this page once our team has checked it.</p></div>`;
+      } catch (err) {
+        btn.disabled = false; btn.innerHTML = 'Send my review <span class="arrow">→</span>';
+        if (confirm("Sorry, we couldn't send your review just now. Send it to us on WhatsApp instead?")) viaWhatsApp(d);
+      }
     });
   }
 

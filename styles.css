@@ -414,11 +414,22 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--r
 .stars legend { font-weight: 600; font-size: .88rem; margin-bottom: 6px; padding: 0; }
 .stars-row { display: inline-flex; flex-direction: row-reverse; gap: 2px; }
 .stars input { position: absolute; opacity: 0; width: 1px; height: 1px; }
-.stars label { margin: 0; font-size: 2.4rem; line-height: 1; color: #e3d9d4; cursor: pointer; transition: color .15s, transform .15s; }
+.stars label { margin: 0; padding: 2px; font-size: 2.6rem; line-height: 1; color: #e3d9d4; cursor: pointer; transition: transform .15s; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 .stars label:hover, .stars label:hover ~ label, .stars input:checked ~ label { color: #f5a623; }
 .stars label:hover { transform: scale(1.12); }
 .stars input:focus-visible + label { outline: 2px solid var(--red); outline-offset: 2px; border-radius: 4px; }
 .stars-text { font-weight: 600; color: var(--fg-muted); font-size: .9rem; white-space: nowrap; }
+.stars.need .stars-text { color: var(--red); }
+.stars.need label { animation: nudge .4s; }
+@keyframes nudge { 30% { transform: translateX(-3px); } 70% { transform: translateX(3px); } }
+.rv-pick { display: inline-flex; gap: 2px; }
+.rv-pick button { border: 0; background: none; padding: 2px; font-size: 2.2rem; line-height: 1; color: #f5a623; cursor: pointer; transition: transform .15s; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.rv-pick:hover button { color: #e3d9d4; }
+.rv-pick button.lit { color: #f5a623; transform: scale(1.1); }
+.rv-thanks { text-align: center; padding: 20px 0; }
+.rv-thanks .rv-stars { font-size: 2rem; }
+.rv-thanks p { color: var(--fg-muted); margin: 0; }
+.hp { position: absolute !important; left: -9999px; width: 1px; height: 1px; opacity: 0; }
 .rv-consent { display: flex; align-items: center; gap: 10px; font-weight: 500; color: var(--fg-muted); }
 .rv-consent input { width: 18px; height: 18px; margin: 0; flex-shrink: 0; appearance: auto; -webkit-appearance: checkbox; accent-color: var(--red); }
 
