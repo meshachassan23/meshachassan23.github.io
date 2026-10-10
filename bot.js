@@ -229,8 +229,8 @@ const BOT_ANSWERS = [
         "Name: " + d.name, "WhatsApp: " + d.phone,
         "Type: " + d.type, "From: " + d.origin + " → Ghana",
         "Details: " + d.details, d.link && "Link: " + d.link,
-        photos.length ? `Photos: ${photos.length} attached` : ""
       ].filter(Boolean).join("\n");
+      const photoNote = photos.length ? `\n📷 I have ${photos.length} photo${photos.length > 1 ? "s" : ""} to send. I'll attach ${photos.length > 1 ? "them" : "it"} in this chat.` : "";
       const btn = f.querySelector(".bot-send");
       btn.disabled = true; btn.textContent = "Sending…";
       const api = (SITE.reviewsApi || "").trim();
@@ -254,7 +254,9 @@ const BOT_ANSWERS = [
           feedback("request"); return;
         } catch (err) { /* user cancelled share */ }
       }
-      box.innerHTML = `✅ Your details are ready. Tap below to send them on WhatsApp${files.length ? ", then <b>attach your photo(s)</b> with the 📎 button" : ""}.<br><a class="bot-btn wa" href="${wa(summary)}" target="_blank" rel="noopener">Send on WhatsApp</a>`;
+      box.innerHTML = files.length
+        ? `<b>Two quick steps:</b><br>1️⃣ Tap below to send your details on WhatsApp.<br>2️⃣ <b>Then attach your photo${files.length > 1 ? "s" : ""}</b> in the same chat with the 📎 (or +) button. WhatsApp can't take photos from websites automatically.<div class="bot-thumbs" style="margin:8px 0">${photos.map((p) => `<span><img src="${p}" alt=""></span>`).join("")}</div><a class="bot-btn wa" href="${wa(summary + photoNote)}" target="_blank" rel="noopener">1️⃣ Send details on WhatsApp</a>`
+        : `✅ Your details are ready. Tap below to send them on WhatsApp.<br><a class="bot-btn wa" href="${wa(summary)}" target="_blank" rel="noopener">Send on WhatsApp</a>`;
       scroll();
     });
     setTimeout(() => f.details.focus({ preventScroll: true }), 50);
