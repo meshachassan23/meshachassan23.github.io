@@ -49,7 +49,7 @@ const SITE = {
 
   // Google Sheet web-app link for customer reviews (see apps-script/README.md).
   // Leave "" to send reviews by WhatsApp instead.
-  reviewsApi: "",
+  reviewsApi: "https://script.google.com/macros/s/AKfycbwp6E0Qn-B-jKONxpXzD4MQfyHzuYq2TLAZiM9JAE7PqRRaKabNuVEQWzKC6dToRNCApw/exec",
 
   // Leave "" to hide a social link
   social: {
