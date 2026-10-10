@@ -1,7 +1,8 @@
-# Customer reviews: Google Sheet setup (one time, about 10 minutes)
+# Reviews + bot requests: Google Sheet setup (one time, about 10 minutes)
 
-Reviews submitted on the website are saved in a Google Sheet in **your** Google account.
-You approve each one by ticking a box, and it then appears on the website. It's free.
+This one free setup powers two things:
+- **Customer reviews**: saved in the sheet; tick a box to publish them on the website.
+- **Requests from the "Ask Mr. Smile" bot**: customer details go into a **Requests** tab, their photos into a Google Drive folder called **Mr. Smile requests**, and you get an email with a WhatsApp reply link.
 
 ## 1. Create the sheet
 1. Go to https://sheets.new while signed in as **meshachassan23@gmail.com**.
@@ -13,7 +14,7 @@ You approve each one by ticking a box, and it then appears on the website. It's 
 3. Click the 💾 **Save** icon.
 4. In the toolbar, choose **setup** from the function drop-down, then click **▶ Run**.
 5. Google asks for permission: click **Review permissions**, choose your account, then **Advanced → Go to (unsafe) → Allow**.
-   (It says "unsafe" only because you wrote the script yourself. It just lets the script use this sheet and email you.)
+   (It says "unsafe" only because you wrote the script yourself. It lets the script use this sheet, save customer photos to your Drive, and email you.)
 
 ## 3. Publish it as a web app
 1. Click **Deploy → New deployment**.

@@ -33,7 +33,7 @@ You can also edit a file directly on github.com: open it in the repository, clic
 A custom address like `yourcompany.com` is optional (about $10/year) and can be connected later in Settings → Pages.
 
 ## Visitors still see the old version after an update?
-Browsers keep old copies of files. In `index.html` and `terms.html`, change every `?v=19` to the next number (`?v=20`, then `?v=21`…) whenever you edit `config.js`, `tracking.js`, `script.js` or `styles.css`.
+Browsers keep old copies of files. In `index.html` and `terms.html`, change every `?v=22` to the next number (`?v=23`, then `?v=24`…) whenever you edit `config.js`, `tracking.js`, `script.js` or `styles.css`.
 
 ## Updating the "Next shipments" board
 Open `schedule.js` and add one line per upcoming shipment, for example:
@@ -74,3 +74,6 @@ All its answers are in `bot.js`, in the `BOT_ANSWERS` list at the top.
 - `keywords:` are words a customer might type that should lead to that answer. Add more if the bot misses questions.
 - Questions it can't answer get a "Ask on WhatsApp" button, and so do 👎 ratings, so no customer gets stuck.
 - When you change prices, payment methods or delivery times, update the bot's answers too.
+- Customers can send **photos and links** through the bot's "📷 Send a photo or link" form.
+  - Once the Google Sheet is set up (`apps-script/README.md`), requests go to the sheet's **Requests** tab, photos to the Drive folder **Mr. Smile requests**, and you get an email.
+  - Until then, on phones the photos and details are shared straight to WhatsApp. On computers, the details open in WhatsApp and the customer attaches the photo there.

@@ -18,10 +18,11 @@ function setup() {
   sh.getRange('F:F').setWrap(true);
 }
 
-// Website sends a new review here.
+// Website sends a new review (or a quote request from the help bot) here.
 function doPost(e) {
   const p = (e && e.parameter) || {};
   if (p.website) return json_({ ok: true });            // spam-bot trap field
+  if (p.kind === 'request') return saveRequest_(p);
   const stars = Math.round(Number(p.stars));
   const name = clean_(p.name, 40);
   const text = clean_(p.text, 600);
@@ -60,6 +61,39 @@ function doGet() {
       service: String(r[4]), text: String(r[5])
     }));
   return json_({ reviews: reviews });
+}
+
+// Quote requests from the "Ask Mr. Smile" bot: photos go to a Drive folder, details to a "Requests" tab.
+function saveRequest_(p) {
+  const name = clean_(p.name, 40), phone = clean_(p.phone, 20), details = clean_(p.details, 800);
+  if (!name || !phone || !details) return json_({ ok: false, error: 'invalid' });
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sh = ss.getSheetByName('Requests') || ss.insertSheet('Requests');
+  if (sh.getLastRow() === 0) {
+    sh.appendRow(['Date', 'Name', 'WhatsApp', 'Type', 'From', 'Details', 'Link', 'Photos', 'Done ✅']);
+    sh.getRange(1, 1, 1, 9).setFontWeight('bold').setBackground('#fff3cf'); sh.setFrozenRows(1);
+  }
+  const folders = DriveApp.getFoldersByName('Mr. Smile requests');
+  const folder = folders.hasNext() ? folders.next() : DriveApp.createFolder('Mr. Smile requests');
+  const links = [];
+  for (let i = 0; i < 4; i++) {
+    const d = p['photo' + i];
+    if (!d || d.indexOf('data:image/') !== 0) continue;
+    const blob = Utilities.newBlob(Utilities.base64Decode(d.split(',')[1]), 'image/jpeg',
+      Utilities.formatDate(new Date(), 'GMT', 'yyyy-MM-dd_HHmm') + '_' + name + '_' + (i + 1) + '.jpg');
+    links.push(folder.createFile(blob).getUrl());
+  }
+  const link = clean_(p.link, 500);
+  sh.appendRow([new Date(), name, phone, clean_(p.type, 40), clean_(p.origin, 20), details, link, links.join('\n'), false]);
+  sh.getRange(sh.getLastRow(), 9).insertCheckboxes();
+  try {
+    const wa = 'https://wa.me/' + phone.replace(/\D/g, '').replace(/^0/, '233');
+    MailApp.sendEmail(NOTIFY_EMAIL, 'New request from ' + name + ' (' + clean_(p.type, 40) + ')',
+      name + ' (WhatsApp ' + phone + ')\nFrom: ' + clean_(p.origin, 20) + ' → Ghana\n\n' + details +
+      (link ? '\n\nLink: ' + link : '') + (links.length ? '\n\nPhotos:\n' + links.join('\n') : '') +
+      '\n\nReply on WhatsApp: ' + wa + '\nAll requests: ' + ss.getUrl());
+  } catch (err) { /* email is optional */ }
+  return json_({ ok: true });
 }
 
 function getSheet_() {

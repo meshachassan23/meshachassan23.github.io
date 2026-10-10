@@ -11,17 +11,18 @@ const BOT_ANSWERS = [
 
   { id: "price", label: "How much does shipping cost?",
     keywords: ["price", "cost", "how much", "rate", "charge", "fee", "cbm", "per kg", "cheap", "expensive"],
-    answer: "Air is priced **per kg**, sea **per CBM** (cubic metre) and cars **per vehicle**.\nPrices change with the market (fuel, shipping lines, exchange rates), so the website only shows estimates. For your **exact price**, send us a quote request and we'll reply quickly.",
-    action: "quote" },
+    answer: "Air is priced **per kg**, sea **per CBM** (cubic metre) and cars **per vehicle**.\nPrices change with the market (fuel, shipping lines, exchange rates), so the website only shows estimates. For your **exact price**, send us your request right here.",
+    action: "request" },
 
   { id: "cars", label: "Do you ship cars?",
     keywords: ["car", "cars", "vehicle", "auction", "copart", "iaai", "truck", "suv", "toyota", "benz"],
-    answer: "Yes! We ship cars from the **USA, Germany and China** to Ghana: from auctions or dealers to Tema port, with clearing guidance.\nSend us the car details or auction link for a full quote.",
-    action: "quote" },
+    answer: "Yes! We ship cars from the **USA, Germany and China** to Ghana: from auctions or dealers to Tema port, with clearing guidance.\nSend us the car details, auction link or photos right here for a full quote.",
+    action: "request" },
 
   { id: "sourcing", label: "Can you buy goods for me in China?",
     keywords: ["buy", "source", "sourcing", "supplier", "alibaba", "1688", "taobao", "factory", "order for me", "purchase"],
-    answer: "Yes. Send us a **photo, link or description** of what you want. We find a reliable supplier, buy it, check it, send you photos and ship it to Ghana." },
+    answer: "Yes. Send us a **photo, link or description** of what you want, right here in this chat. We find a reliable supplier, buy it, check it, send you photos and ship it to Ghana.",
+    action: "request" },
 
   { id: "already-bought", label: "I already bought online. Can you ship it?",
     keywords: ["already bought", "already ordered", "warehouse", "address", "amazon", "ebay", "ship my", "forward"],
@@ -58,6 +59,11 @@ const BOT_ANSWERS = [
     keywords: ["next shipment", "next container", "closing", "cut off", "cutoff", "next ship", "schedule"],
     answer: "See our **Next shipments** board for closing dates, or ask us for the next air and sea departures.",
     action: "schedule" },
+
+  { id: "request", label: "📷 Send a photo or link",
+    keywords: ["photo", "picture", "image", "pic", "link", "send", "upload", "attach", "quote", "request"],
+    answer: "Great! Fill in the form below. You can attach **photos** and paste a **link**. We'll reply on WhatsApp with your quote.",
+    action: "request" },
 
   { id: "human", label: "Talk to a person",
     keywords: ["person", "human", "agent", "call", "talk", "speak", "whatsapp", "contact", "phone number"],
@@ -121,8 +127,9 @@ const BOT_ANSWERS = [
       chips.appendChild(b);
     });
   };
-  const mainChips = () => setChips(BOT_ANSWERS.filter((a) => a.id !== "human").slice(0, 8)
-    .map((a) => [a.label, () => answer(a)]).concat([["💬 Talk to a person", () => answer(BOT_ANSWERS.find((a) => a.id === "human"))]]));
+  const reqA = () => BOT_ANSWERS.find((a) => a.id === "request");
+  const mainChips = () => setChips([[reqA().label, () => answer(reqA())]].concat(BOT_ANSWERS.filter((a) => a.id !== "human" && a.id !== "request").slice(0, 8)
+    .map((a) => [a.label, () => answer(a)])).concat([["💬 Talk to a person", () => answer(BOT_ANSWERS.find((a) => a.id === "human"))]]));
 
   const actionHtml = (a) => {
     switch (a.action) {
@@ -150,11 +157,107 @@ const BOT_ANSWERS = [
   const answer = (a) => {
     mode = a.action === "track" ? "track" : null;
     typing(() => {
-      say(fmt(a.answer) + (a.action && a.action !== "track" ? "<br>" + actionHtml(a) : ""));
+      say(fmt(a.answer) + (a.action && a.action !== "track" && a.action !== "request" ? "<br>" + actionHtml(a) : ""));
       if (a.action === "track") { input.placeholder = "Enter tracking code, e.g. DEMO123"; input.focus(); }
+      else if (a.action === "request") requestForm(a.id === "cars" ? "Car / vehicle" : a.id === "sourcing" ? "Buy for me (sourcing)" : "");
       else feedback(a.label);
       mainChips();
     });
+  };
+
+  // ---- In-chat request form with photo + link upload ----
+  const shrink = (file) => new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const max = 1280, s = Math.min(1, max / Math.max(img.width, img.height));
+      const c = document.createElement("canvas");
+      c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(img.src);
+      resolve(c.toDataURL("image/jpeg", 0.8));
+    };
+    img.onerror = () => reject(new Error("not an image"));
+    img.src = URL.createObjectURL(file);
+  });
+  const dataToFile = (d, name) => {
+    const bin = atob(d.split(",")[1]); const u = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+    return new File([u], name, { type: "image/jpeg" });
+  };
+
+  const requestForm = (type) => {
+    const box = say(`
+      <form class="bot-req">
+        <label>What do you need?<textarea name="details" rows="3" required maxlength="800" placeholder="e.g. 50 pairs of sneakers, sizes 40–45"></textarea></label>
+        <label>Link (optional)<input name="link" type="url" placeholder="Paste a product or car link"></label>
+        <div class="bot-photos">
+          <label class="bot-add">📷 Add photos<input type="file" name="photos" accept="image/*" multiple hidden></label>
+          <div class="bot-thumbs"></div>
+        </div>
+        <div class="bot-row">
+          <label>Ship from<select name="origin"><option>China</option><option>Germany</option><option>USA</option><option>Not sure</option></select></label>
+          <label>Type<select name="type"><option>General goods</option><option>Car / vehicle</option><option>Bulk / business shipment</option><option>Buy for me (sourcing)</option></select></label>
+        </div>
+        <div class="bot-row">
+          <label>Your name<input name="name" required maxlength="40" autocomplete="given-name"></label>
+          <label>WhatsApp number<input name="phone" required type="tel" maxlength="20" placeholder="e.g. 024 123 4567" autocomplete="tel"></label>
+        </div>
+        <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <button class="bot-send" type="submit">Send request</button>
+      </form>`, "from-bot form");
+    const f = box.querySelector("form");
+    if (type) f.type.value = type;
+    const photos = [];
+    const thumbs = f.querySelector(".bot-thumbs");
+    const drawThumbs = () => {
+      thumbs.innerHTML = photos.map((p, i) => `<span><img src="${p}" alt=""><button type="button" data-i="${i}" aria-label="Remove photo">×</button></span>`).join("");
+      thumbs.querySelectorAll("button").forEach((b) => b.addEventListener("click", () => { photos.splice(+b.dataset.i, 1); drawThumbs(); }));
+    };
+    f.photos.addEventListener("change", async () => {
+      for (const file of [...f.photos.files].slice(0, 4 - photos.length)) {
+        try { photos.push(await shrink(file)); } catch (e) { /* skip non-images */ }
+      }
+      f.photos.value = ""; drawThumbs(); scroll();
+    });
+    f.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (f.website.value) return;
+      const d = Object.fromEntries(new FormData(f));
+      delete d.photos; delete d.website;
+      const summary = [
+        "*New request from the website*",
+        "Name: " + d.name, "WhatsApp: " + d.phone,
+        "Type: " + d.type, "From: " + d.origin + " → Ghana",
+        "Details: " + d.details, d.link && "Link: " + d.link,
+        photos.length ? `Photos: ${photos.length} attached` : ""
+      ].filter(Boolean).join("\n");
+      const btn = f.querySelector(".bot-send");
+      btn.disabled = true; btn.textContent = "Sending…";
+      const api = (SITE.reviewsApi || "").trim();
+      if (api) {
+        try {
+          const body = new URLSearchParams({ kind: "request", ...d });
+          photos.forEach((p, i) => body.append("photo" + i, p));
+          const res = await fetch(api, { method: "POST", body });
+          const out = await res.json();
+          if (!out.ok) throw new Error(out.error || "failed");
+          box.innerHTML = `✅ <b>Request sent!</b> Thanks, ${esc(d.name)}. We'll reply on WhatsApp (${esc(d.phone)}) with your quote.`;
+          feedback("request"); return;
+        } catch (err) { /* fall through to sharing */ }
+      }
+      // No online inbox set up (or it failed): share photos + details straight to WhatsApp.
+      const files = photos.map((p, i) => dataToFile(p, `photo-${i + 1}.jpg`));
+      if (files.length && navigator.canShare && navigator.canShare({ files })) {
+        try {
+          await navigator.share({ files, text: summary + "\n\nPlease send to Mr. Smile: +" + SITE.whatsapp });
+          box.innerHTML = `✅ <b>Almost done!</b> Choose WhatsApp, then send it to <b>Mr. Smile (${esc(SITE.whatsappDisplay)})</b>.`;
+          feedback("request"); return;
+        } catch (err) { /* user cancelled share */ }
+      }
+      box.innerHTML = `✅ Your details are ready. Tap below to send them on WhatsApp${files.length ? ", then <b>attach your photo(s)</b> with the 📎 button" : ""}.<br><a class="bot-btn wa" href="${wa(summary)}" target="_blank" rel="noopener">Send on WhatsApp</a>`;
+      scroll();
+    });
+    setTimeout(() => f.details.focus({ preventScroll: true }), 50);
   };
 
   const track = (code) => {
