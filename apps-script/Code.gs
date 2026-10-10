@@ -16,6 +16,9 @@ function setup() {
   sh.setFrozenRows(1);
   sh.setColumnWidth(6, 420);
   sh.getRange('F:F').setWrap(true);
+  // Create the photo folder now so Google asks for all permissions during setup.
+  if (!DriveApp.getFoldersByName('Mr. Smile requests').hasNext()) DriveApp.createFolder('Mr. Smile requests');
+  MailApp.getRemainingDailyQuota();
 }
 
 // Website sends a new review (or a quote request from the help bot) here.
