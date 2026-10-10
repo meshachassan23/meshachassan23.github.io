@@ -33,7 +33,7 @@ You can also edit a file directly on github.com: open it in the repository, clic
 A custom address like `yourcompany.com` is optional (about $10/year) and can be connected later in Settings → Pages.
 
 ## Visitors still see the old version after an update?
-Browsers keep old copies of files. In `index.html` and `terms.html`, change every `?v=17` to the next number (`?v=18`, then `?v=19`…) whenever you edit `config.js`, `tracking.js`, `script.js` or `styles.css`.
+Browsers keep old copies of files. In `index.html` and `terms.html`, change every `?v=19` to the next number (`?v=20`, then `?v=21`…) whenever you edit `config.js`, `tracking.js`, `script.js` or `styles.css`.
 
 ## Updating the "Next shipments" board
 Open `schedule.js` and add one line per upcoming shipment, for example:
@@ -67,3 +67,10 @@ To publish one by hand, add a line to `reviews.js`:
 { name: "Kofi", city: "Kumasi", stars: 5, service: "Car shipping", date: "2026-10-04", text: "My car arrived in perfect condition." },
 ```
 - Only publish real reviews, with the customer's permission. Never make reviews up.
+
+## The help bot ("Ask Mr. Smile")
+All its answers are in `bot.js`, in the `BOT_ANSWERS` list at the top.
+- To change an answer, edit its `answer:` text. `**words**` shows in bold.
+- `keywords:` are words a customer might type that should lead to that answer. Add more if the bot misses questions.
+- Questions it can't answer get a "Ask on WhatsApp" button, and so do 👎 ratings, so no customer gets stuck.
+- When you change prices, payment methods or delivery times, update the bot's answers too.

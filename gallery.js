@@ -19,6 +19,26 @@ const GALLERY = [
     { id: "photo-1548874468-025d0edfdf8b", alt: "iPad Pro home screen" },
     { id: "photo-1570117858976-9490649cbf83", alt: "iPad and Apple Pencil" }
   ]},
+  { title: "Shoes", blurb: "Men's and women's shoes: sneakers, loafers, heels, sandals and more, in bulk or single pairs.", photos: [
+    { id: "photo-1603808033192-082d6919d3e1", alt: "Two-tone leather sneakers", caption: "Two-tone leather sneakers" },
+    { id: "photo-1678784973551-f38208de2529", alt: "Suede loafers", caption: "Suede loafers" },
+    { id: "photo-1789110519471-74ac17dd1cf6", alt: "Strappy patent heels", caption: "Strappy patent heels" },
+    { id: "photo-1789110519431-0a9bf0af5074", alt: "Patent slingback flats", caption: "Patent slingback flats" },
+    { id: "photo-1630386474440-8f2e6d752a98", alt: "Platform wedge sandals", caption: "Platform wedge sandals" },
+    { id: "photo-1758542988948-b95a6c4aa68b", alt: "Buckle Mary Jane shoes", caption: "Buckle Mary Jane shoes" },
+    { id: "photo-1519415943484-9fa1873496d4", alt: "Assorted women's heels", caption: "Assorted women's heels" },
+    { id: "photo-1632497775901-50ba4637399f", alt: "Black leather sneakers", caption: "Black leather sneakers" }
+  ]},
+  { title: "Bags", blurb: "Handbags, crossbody and shoulder bags, sling bags and more.", photos: [
+    { id: "photo-1575202332411-b01fe9ace7a8", alt: "Light-blue leather bag", caption: "Light-blue leather bag" },
+    { id: "photo-1789110854681-bedd95d273a3", alt: "Black croc-effect shoulder bag", caption: "Black croc-effect shoulder bag" },
+    { id: "photo-1789110854729-1753396f6528", alt: "Patterned chain crossbody bag", caption: "Patterned chain crossbody" },
+    { id: "photo-1788999423880-6e271d7323d3", alt: "Brown structured handbag", caption: "Brown structured handbag" },
+    { id: "photo-1620786514684-ff35b5aae55e", alt: "Black crossbody bag", caption: "Black crossbody bag" },
+    { id: "photo-1718622795525-2295971921ba", alt: "Tan barrel crossbody bag", caption: "Tan barrel crossbody" },
+    { id: "photo-1760624294514-ca40aafe3d96", alt: "Leather sling bags in five colours", caption: "Leather sling bags, 5 colours" },
+    { id: "photo-1657603719375-8ffdacaac790", alt: "Tan leather waist bag", caption: "Tan leather waist bag" }
+  ]},
   { title: "Hair & beauty", blurb: "Wigs, hair extensions, cosmetics and salon products.", photos: [
     { id: "photo-1515172371186-85d50c9f1fc1", alt: "Three coloured wigs" },
     { id: "photo-1700219212623-77aebb917034", alt: "Display of wigs on mannequin heads" }

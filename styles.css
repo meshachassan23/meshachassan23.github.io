@@ -675,3 +675,50 @@ details p { color: var(--fg-muted); margin: -6px 0 22px; max-width: 44em; }
   .lb-nav { width: 40px; height: 40px; font-size: 1.6rem; }
   .lb-foot .btn { width: 100%; }
 }
+
+/* ---------- Help bot ---------- */
+.bot-launch {
+  position: fixed; right: 20px; bottom: 92px; z-index: 61; display: flex; align-items: center; gap: 8px;
+  padding: 6px 16px 6px 6px; border: 0; border-radius: 999px; cursor: pointer; font: 700 .9rem var(--body);
+  background: var(--ink); color: #fff; box-shadow: 0 14px 34px -10px rgba(0,0,0,.5); transition: transform .25s var(--ease);
+}
+.bot-launch img { width: 36px; height: 36px; border-radius: 10px; }
+.bot-launch:hover { transform: translateY(-2px); }
+.bot-launch.open { opacity: 0; pointer-events: none; }
+.bot {
+  position: fixed; right: 20px; bottom: 20px; z-index: 70; width: min(380px, calc(100% - 24px)); height: min(600px, calc(100% - 110px));
+  display: flex; flex-direction: column; background: #fff; border-radius: 24px; overflow: hidden;
+  box-shadow: 0 30px 80px -10px rgba(0,0,0,.45); animation: pop .3s var(--ease);
+}
+.bot[hidden] { display: none; }
+.bot-head { display: flex; align-items: center; gap: 10px; padding: 14px 14px 14px 16px; background: linear-gradient(135deg, var(--red), var(--red-dark)); color: #fff; }
+.bot-head img { width: 38px; height: 38px; border-radius: 10px; }
+.bot-head div { flex: 1; line-height: 1.2; }
+.bot-head small { display: flex; align-items: center; gap: 6px; font-size: .75rem; opacity: .85; }
+.bot-head small i { width: 7px; height: 7px; border-radius: 50%; background: #3ee07a; }
+.bot-x { width: 34px; height: 34px; border-radius: 50%; border: 0; background: rgba(255,255,255,.18); color: #fff; font-size: 1.4rem; cursor: pointer; }
+.bot-log { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; background: var(--bg); }
+.bot-msg { max-width: 86%; padding: 10px 14px; border-radius: 18px; font-size: .93rem; line-height: 1.5; }
+.bot-msg.from-bot { align-self: flex-start; background: #fff; border: 1px solid var(--line); border-bottom-left-radius: 6px; }
+.bot-msg.me { align-self: flex-end; background: var(--red); color: #fff; border-bottom-right-radius: 6px; }
+.bot-msg.from-bot.fb { background: transparent; border: 0; padding: 0 4px; font-size: .85rem; color: var(--fg-muted); }
+.bot-fb button { border: 1px solid var(--line); background: #fff; border-radius: 999px; padding: 2px 10px; margin-left: 6px; cursor: pointer; font-size: .95rem; }
+.bot-btn { display: inline-block; margin-top: 8px; padding: 7px 14px; border-radius: 999px; background: var(--ink); color: #fff !important; text-decoration: none; font-weight: 600; font-size: .85rem; }
+.bot-btn.wa { background: #25d366; }
+.dots { display: inline-flex; gap: 4px; }
+.dots i { width: 7px; height: 7px; border-radius: 50%; background: #c9bdb9; animation: blink 1s infinite; }
+.dots i:nth-child(2) { animation-delay: .15s; } .dots i:nth-child(3) { animation-delay: .3s; }
+@keyframes blink { 50% { opacity: .3; } }
+.bot-chips { display: flex; gap: 6px; overflow-x: auto; padding: 10px 12px; border-top: 1px solid var(--line); background: #fff; scrollbar-width: none; }
+.bot-chips::-webkit-scrollbar { display: none; }
+.bot-chips button { flex: 0 0 auto; border: 1px solid rgba(227,23,43,.3); background: #fff; color: var(--red-dark); border-radius: 999px; padding: 7px 12px; font: 600 .82rem var(--body); cursor: pointer; }
+.bot-chips button:hover { background: #fff1f0; }
+.bot-input { display: flex; gap: 8px; padding: 10px 12px 12px; background: #fff; }
+.bot-input input { margin: 0; border-radius: 999px; padding: 11px 16px; font-size: .95rem; }
+.bot-input button { width: 44px; height: 44px; flex-shrink: 0; border-radius: 50%; border: 0; background: var(--red); color: #fff; font-size: 1.05rem; cursor: pointer; }
+body.bot-open .wa-float { opacity: 0; pointer-events: none; }
+@media (max-width: 720px) {
+  .bot { right: 0; bottom: 0; width: 100%; height: 100%; max-height: 100dvh; border-radius: 0; }
+  .bot-launch span { display: none; }
+  .bot-launch { padding: 6px; right: 22px; }
+}
