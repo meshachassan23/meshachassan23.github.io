@@ -72,10 +72,7 @@ function saveRequest_(p) {
   if (!name || !phone || !details) return json_({ ok: false, error: 'invalid' });
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sh = ss.getSheetByName('Requests') || ss.insertSheet('Requests');
-  if (sh.getLastRow() === 0) {
-    sh.appendRow(['Date', 'Name', 'WhatsApp', 'Type', 'From', 'Details', 'Link', 'Photos', 'Done ✅']);
-    sh.getRange(1, 1, 1, 9).setFontWeight('bold').setBackground('#fff3cf'); sh.setFrozenRows(1);
-  }
+  requestHeaders_(sh);
   const folders = DriveApp.getFoldersByName('Mr. Smile requests');
   const folder = folders.hasNext() ? folders.next() : DriveApp.createFolder('Mr. Smile requests');
   const links = [];
@@ -87,16 +84,47 @@ function saveRequest_(p) {
     links.push(folder.createFile(blob).getUrl());
   }
   const link = clean_(p.link, 500);
-  sh.appendRow([new Date(), name, phone, clean_(p.type, 40), clean_(p.origin, 20), details, link, links.join('\n'), false]);
-  sh.getRange(sh.getLastRow(), 9).insertCheckboxes();
+  sh.appendRow([new Date(), name, phone, clean_(p.type, 40), clean_(p.origin, 20), details, link, links.join('\n'), false, '']);
+  const row = sh.getLastRow();
+  sh.getRange(row, 9).insertCheckboxes();
+  const wa = waLink_(phone, name, details);
+  sh.getRange(row, 10).setFormula('=HYPERLINK("' + wa + '","💬 Chat")');
   try {
-    const wa = 'https://wa.me/' + phone.replace(/\D/g, '').replace(/^0/, '233');
     MailApp.sendEmail(NOTIFY_EMAIL, 'New request from ' + name + ' (' + clean_(p.type, 40) + ')',
       name + ' (WhatsApp ' + phone + ')\nFrom: ' + clean_(p.origin, 20) + ' → Ghana\n\n' + details +
       (link ? '\n\nLink: ' + link : '') + (links.length ? '\n\nPhotos:\n' + links.join('\n') : '') +
       '\n\nReply on WhatsApp: ' + wa + '\nAll requests: ' + ss.getUrl());
   } catch (err) { /* email is optional */ }
   return json_({ ok: true });
+}
+
+// Turns a Ghana number like 024 123 4567 into a WhatsApp chat link (no need to save the contact).
+function waLink_(phone, name, details) {
+  let d = String(phone).replace(/\D/g, '');
+  if (d.indexOf('00') === 0) d = d.slice(2);
+  if (d.indexOf('0') === 0) d = '233' + d.slice(1);
+  else if (d.length === 9) d = '233' + d;
+  const msg = 'Hello ' + name + ', this is Mr. Smile Logistics. Thank you for your request: "' +
+    String(details).slice(0, 120) + '". ';
+  return 'https://wa.me/' + d + '?text=' + encodeURIComponent(msg);
+}
+
+function requestHeaders_(sh) {
+  const h = ['Date', 'Name', 'WhatsApp', 'Type', 'From', 'Details', 'Link', 'Photos', 'Done ✅', 'Chat 💬'];
+  sh.getRange(1, 1, 1, h.length).setValues([h]).setFontWeight('bold').setBackground('#fff3cf');
+  sh.setFrozenRows(1);
+}
+
+// Run ONCE after updating the script: adds a "💬 Chat" link to requests you already have.
+function addChatLinks() {
+  const sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Requests');
+  if (!sh) return;
+  requestHeaders_(sh);
+  const rows = sh.getDataRange().getValues();
+  for (let r = 1; r < rows.length; r++) {
+    if (!rows[r][2]) continue;
+    sh.getRange(r + 1, 10).setFormula('=HYPERLINK("' + waLink_(rows[r][2], rows[r][1], rows[r][5]) + '","💬 Chat")');
+  }
 }
 
 function getSheet_() {
