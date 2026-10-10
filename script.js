@@ -183,10 +183,10 @@
   if (ratesBody && routeSel) {
     Object.entries(SITE.routes).forEach(([route, m]) => {
       ratesBody.insertAdjacentHTML("beforeend",
-        `<tr><td><strong>${route}</strong></td>
-          <td>${rateText(m.air)}<small>${m.air.days}</small></td>
-          <td>${rateText(m.sea)}<small>${m.sea.days}</small></td>
-          <td>${m.car ? rateText(m.car) + `<small>${m.car.days}</small>` : "–"}</td></tr>`);
+        `<tr><td data-label="Route"><strong>${route}</strong></td>
+          <td data-label="Air cargo">${rateText(m.air)}<small>${m.air.days}</small></td>
+          <td data-label="Sea freight">${rateText(m.sea)}<small>${m.sea.days}</small></td>
+          <td data-label="Car">${m.car ? rateText(m.car) + `<small>${m.car.days}</small>` : "–"}</td></tr>`);
       routeSel.insertAdjacentHTML("beforeend", `<option>${route}</option>`);
     });
     const methodSel = $("#calc-method"), qty = $("#calc-qty"),
@@ -450,21 +450,32 @@
   }
 
   // ---- Fade sections in as they scroll into view ----
-  const reveals = $$(".reveal");
-  if ("IntersectionObserver" in window) {
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((en) => {
-        if (!en.isIntersecting) return;
-        const sibs = [...en.target.parentElement.children].filter((c) => c.classList.contains("reveal"));
-        en.target.style.transitionDelay = Math.min(sibs.indexOf(en.target), 5) * 70 + "ms";
-        en.target.classList.add("in");
-        io.unobserve(en.target);
-      });
-    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
-    reveals.forEach((el) => io.observe(el));
-  } else {
-    reveals.forEach((el) => el.classList.add("in"));
-  }
+  // Uses a simple position check on scroll (works in every browser, including
+  // in-app browsers), plus a safety net so content can never stay hidden.
+  const pending = new Set($$(".reveal"));
+  const showIfVisible = () => {
+    const limit = window.innerHeight * 0.95;
+    pending.forEach((el) => {
+      const r = el.getBoundingClientRect();
+      if (r.top < limit && r.bottom > 0) {
+        const sibs = [...el.parentElement.children].filter((c) => c.classList.contains("reveal"));
+        el.style.transitionDelay = Math.min(sibs.indexOf(el), 5) * 70 + "ms";
+        el.classList.add("in");
+        pending.delete(el);
+      } else if (r.bottom <= 0) {          // already scrolled past: just show it
+        el.classList.add("in"); pending.delete(el);
+      }
+    });
+  };
+  let ticking = false;
+  const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { ticking = false; showIfVisible(); }); } };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
+  window.addEventListener("load", showIfVisible);
+  window.addEventListener("hashchange", () => setTimeout(showIfVisible, 50));
+  showIfVisible();
+  // Safety net: after 4 seconds, show anything still hidden.
+  setTimeout(() => pending.forEach((el) => el.classList.add("in")), 4000);
 
   // ---- Quote form -> WhatsApp ----
   const originSel = $("#quote-origin");
